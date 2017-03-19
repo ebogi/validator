@@ -5,7 +5,6 @@ import com.learn.validator.CSV.Row;
 import com.learn.validator.CSV.Schema;
 import com.learn.validator.validation.AllTypeValidator;
 import com.learn.validator.validation.NumberOfValuesValidator;
-import com.learn.validator.validation.ValidatorMap;
 
 import java.io.File;
 import java.io.IOException;
