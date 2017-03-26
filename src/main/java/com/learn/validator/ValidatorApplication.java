@@ -1,6 +1,7 @@
 package com.learn.validator;
 
 
+import com.learn.validator.CSV.InvalidSchemaFileException;
 import com.learn.validator.CSV.Row;
 import com.learn.validator.CSV.Schema;
 import com.learn.validator.validation.AllTypeValidator;
@@ -12,18 +13,23 @@ import java.util.Scanner;
 
 public class ValidatorApplication {
 
-  private String filePath = null;
+  private File file = null;
   private Schema schema = null;
 
-  public ValidatorApplication() throws IOException {
-    this.filePath = "/Users/boglarka.egyed/learn/validator/src/test/resources/test.csv";
-    // TODO: access resources folder instead of full filepath usage
-    this.schema = new Schema();
+  public ValidatorApplication() throws IOException{
+    ClassLoader classLoader = getClass().getClassLoader();
+    file = new File(classLoader.getResource("input.csv").getFile());
+    schema = new Schema("schema.ini");
   }
 
   public static void main(String[] args) {
     try {
       ValidatorApplication validatorApplication = new ValidatorApplication();
+
+      if (validatorApplication.schema.isValidSchema()) {
+        throw new InvalidSchemaFileException("Schema file is not valid: given number of " +
+            "columns in a row and types are different!");
+      }
 
       if(validatorApplication.parseAndValidateFile()) {
         System.out.println("SUCCES: Valid input file!");
@@ -36,7 +42,7 @@ public class ValidatorApplication {
   }
 
   private boolean parseAndValidateFile() throws Exception {
-    Scanner scanner = new Scanner(new File(filePath));
+    Scanner scanner = new Scanner(file);
     int rowNumber = 0;
     NumberOfValuesValidator numberOfValuesValidator = new NumberOfValuesValidator(schema);
     AllTypeValidator allTypeValidator = new AllTypeValidator();

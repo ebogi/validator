@@ -5,10 +5,10 @@ import org.ini4j.Profile;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 
 public class Schema {
 
-  private String filePath = null;
   private String separator = null;
   private int numberOfColumnsInARow = -1;
   private String[] types = null;
@@ -38,13 +38,9 @@ public class Schema {
     return types;
   }
 
-  public Schema() throws IOException {
-//    ClassLoader classLoader = getClass().getClassLoader();
-//    File file = new File(classLoader.getResource("CSVSchema.ini").getFile());
-    filePath = "/Users/boglarka.egyed/learn/validator/src/main/resources/CSVschema.ini";
-    File file = new File(filePath);
-    //TODO: separator escaping in ini file
-    //TODO: access resource folder instead of full filepath usage
+  public Schema(String fileName) throws IOException {
+    ClassLoader classLoader = getClass().getClassLoader();
+    File file = new File(classLoader.getResource(fileName).getFile());
     Ini ini = new Ini(file);
     Profile.Section schema = ini.get("schema");
 
@@ -53,4 +49,7 @@ public class Schema {
     setTypes(schema.get("types").split(","));
   }
 
+  public boolean isValidSchema() {
+    return getNumberOfColumnsInARow() == Array.getLength(getTypes());
+  }
 }
