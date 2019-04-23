@@ -1,2 +1,2 @@
 # validator
-My Java learning experience through a file validator application.
+Java practicing through a file validator application.
